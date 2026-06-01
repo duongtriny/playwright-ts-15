@@ -12,3 +12,12 @@ test('Verify login successful', async ({ page }) => {
     //Second case: Xpath with text
     await expect(page.locator("//h1[text()='Dashboard']")).toBeVisible();
 });
+
+test('Verify form empty', async ({ page }) => {
+    await page.goto('http://localhost:3000/admin/login');
+    let signInButton = page.getByRole('button', { name: 'SIGN IN' });
+    await expect(signInButton).toBeVisible();
+    await signInButton.click();
+    await expect.soft(page.locator("//div[text()='Email is required']")).toBeVisible();
+    await expect.soft(page.locator("//div[text()='Password is required']")).toBeVisible();
+});
