@@ -1,7 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-test('Verify login successful', async ({ page }) => {
+test.beforeEach('Before each test', async ({ page }) => {
     await page.goto('http://localhost:3000/admin/login');
+});
+
+test('Verify login successful', async ({ page }) => {
     let signInButton = page.getByRole('button', { name: 'SIGN IN' });
     await expect(signInButton).toBeVisible();
     await page.locator('#field-email').fill('test@with.me');
@@ -14,7 +17,6 @@ test('Verify login successful', async ({ page }) => {
 });
 
 test('Verify form empty', async ({ page }) => {
-    await page.goto('http://localhost:3000/admin/login');
     let signInButton = page.getByRole('button', { name: 'SIGN IN' });
     await expect(signInButton).toBeVisible();
     await signInButton.click();
