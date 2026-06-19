@@ -1,20 +1,25 @@
-import { expect, Page, test } from "@playwright/test";
-import path from "path";
-import { clickButtonByLabel, clickMenuByLabel, inputDateByLabel, inputTextByLabel, selectCheckboxByLabel, selectDropdownByLabel, selectRadioOptionByLabel, verifyNotification } from "../../src/common/common";
+import { expect, test } from "@playwright/test";
+import { CommonPage } from "../../src/pages/commonPage";
+import { CouponPage } from "../../src/pages/couponPage";
+import { LoginPage } from "../../src/pages/loginPage";
+
+let commonPage: CommonPage;
+let couponPage: CouponPage;
+let loginPage: LoginPage;
 
 test.beforeEach('Before each test', async ({ page }) => {
+    commonPage = new CommonPage(page);
+    couponPage = new CouponPage(page);
+    loginPage = new LoginPage(page);
     await page.goto('http://localhost:3000/admin/login');
 });
 
 test('Verify create coupon successful', async ({ page }) => {
-    let signInButton = page.getByRole('button', { name: 'SIGN IN' });
-    await expect(signInButton).toBeVisible();
-    await inputTextByLabel('Email*', 'test@with.me', page);
-    await inputTextByLabel('Password*', '1234567890', page);
-    await clickButtonByLabel('SIGN IN', page);
+    await loginPage.isOnPage();
+    await loginPage.adminLogin('test@with.me', '1234567890');
     await expect(page.locator("//h1[text()='Dashboard']")).toBeVisible();
-    await clickMenuByLabel('New Coupon', page);
-    await expect(page.locator("//h1[text()='Create a new coupon']")).toBeVisible();
+    await commonPage.clickMenuByLabel('New Coupon');
+    await couponPage.isOnPage();
     const random = new Date().getTime();
     const inputData = {
         couponCode: `CODE${random}`,
@@ -26,30 +31,18 @@ test('Verify create coupon successful', async ({ page }) => {
         minimumQuantity: '2',
         customerPurchase: '1'
     };
-    await inputTextByLabel('Coupon Code*', inputData.couponCode, page);
-    await inputTextByLabel('Description*', inputData.description, page);
-    await selectRadioOptionByLabel('Status*', 'Disabled', page);
-    await inputTextByLabel('Discount amount*', inputData.discountAmount, page);
-    await inputDateByLabel('Start date', inputData.startDate, page);
-    await inputDateByLabel('End date', inputData.endDate, page);
-    await selectCheckboxByLabel('Free shipping?', 'check', page);
-    await selectRadioOptionByLabelCoupon('Discount Type', 'Fixed discount to entire order', page);
-    await inputTextByLabel('Minimum purchase amount', inputData.minimumAmount, page);
-    await inputTextByLabel('Minimum purchase qty', inputData.minimumQuantity, page);
-    await selectDropdownByLabelCoupon('Customer groups', 'Default', page);
-    await inputTextByLabel("Customer's purchase", inputData.customerPurchase, page);
-    await clickButtonByLabel("Save", page);
+    await commonPage.inputTextByLabel('Coupon Code*', inputData.couponCode);
+    await commonPage.inputTextByLabel('Description*', inputData.description);
+    await commonPage.selectRadioOptionByLabel('Status*', 'Disabled');
+    await commonPage.inputTextByLabel('Discount amount*', inputData.discountAmount);
+    await commonPage.inputDateByLabel('Start date', inputData.startDate);
+    await commonPage.inputDateByLabel('End date', inputData.endDate);
+    await commonPage.selectCheckboxByLabel('Free shipping?', 'check');
+    await couponPage.selectRadioOptionByLabelCoupon('Discount Type', 'Fixed discount to entire order');
+    await commonPage.inputTextByLabel('Minimum purchase amount', inputData.minimumAmount);
+    await commonPage.inputTextByLabel('Minimum purchase qty', inputData.minimumQuantity);
+    await couponPage.selectDropdownByLabelCoupon('Customer groups', 'Default');
+    await commonPage.inputTextByLabel("Customer's purchase", inputData.customerPurchase);
+    await commonPage.clickButtonByLabel("Save");
     await expect(page.getByText(`Editing ${inputData.couponCode}`)).toBeVisible();
 });
-
-async function selectRadioOptionByLabelCoupon(label: string, option: string, page: Page) {
-    let xpath = `//div[@data-slot='card-title' and normalize-space()='${label}']/following::label[normalize-space()='${option}']/preceding::span[@role='radio'][1]`;
-    await page.locator(xpath).click();
-}
-
-export async function selectDropdownByLabelCoupon(label: string, value: string, page: Page) {
-    let xpath = `//label[normalize-space()='${label}']/following::input[1]`;
-    await page.locator(xpath).click();
-    let itemXpath = `//div[@role='option' and normalize-space()='${value}']`;
-    await page.locator(itemXpath).click();
-}
