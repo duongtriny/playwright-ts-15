@@ -2,13 +2,14 @@ import { expect, test } from "@playwright/test";
 import { CommonPage } from "../../src/pages/commonPage";
 import { CouponPage } from "../../src/pages/couponPage";
 import { LoginPage } from "../../src/pages/loginPage";
+import { DashboardPage } from "../../src/pages/dashboardPage";
 
-let commonPage: CommonPage;
 let couponPage: CouponPage;
 let loginPage: LoginPage;
+let dashboardPage: DashboardPage;
 
 test.beforeEach('Before each test', async ({ page }) => {
-    commonPage = new CommonPage(page);
+    dashboardPage = new DashboardPage(page);
     couponPage = new CouponPage(page);
     loginPage = new LoginPage(page);
     await page.goto('http://localhost:3000/admin/login');
@@ -17,8 +18,8 @@ test.beforeEach('Before each test', async ({ page }) => {
 test('Verify create coupon successful', async ({ page }) => {
     await loginPage.isOnPage();
     await loginPage.adminLogin('test@with.me', '1234567890');
-    await expect(page.locator("//h1[text()='Dashboard']")).toBeVisible();
-    await commonPage.clickMenuByLabel('New Coupon');
+    await dashboardPage.isOnPage();
+    await dashboardPage.clickMenuByLabel('New Coupon');
     await couponPage.isOnPage();
     const random = new Date().getTime();
     const inputData = {
@@ -31,18 +32,18 @@ test('Verify create coupon successful', async ({ page }) => {
         minimumQuantity: '2',
         customerPurchase: '1'
     };
-    await commonPage.inputTextByLabel('Coupon Code*', inputData.couponCode);
-    await commonPage.inputTextByLabel('Description*', inputData.description);
-    await commonPage.selectRadioOptionByLabel('Status*', 'Disabled');
-    await commonPage.inputTextByLabel('Discount amount*', inputData.discountAmount);
-    await commonPage.inputDateByLabel('Start date', inputData.startDate);
-    await commonPage.inputDateByLabel('End date', inputData.endDate);
-    await commonPage.selectCheckboxByLabel('Free shipping?', 'check');
+    await couponPage.inputTextByLabel('Coupon Code*', inputData.couponCode);
+    await couponPage.inputTextByLabel('Description*', inputData.description);
+    await couponPage.selectRadioOptionByLabel('Status*', 'Disabled');
+    await couponPage.inputTextByLabel('Discount amount*', inputData.discountAmount);
+    await couponPage.inputDateByLabel('Start date', inputData.startDate);
+    await couponPage.inputDateByLabel('End date', inputData.endDate);
+    await couponPage.selectCheckboxByLabel('Free shipping?', 'check');
     await couponPage.selectRadioOptionByLabelCoupon('Discount Type', 'Fixed discount to entire order');
-    await commonPage.inputTextByLabel('Minimum purchase amount', inputData.minimumAmount);
-    await commonPage.inputTextByLabel('Minimum purchase qty', inputData.minimumQuantity);
+    await couponPage.inputTextByLabel('Minimum purchase amount', inputData.minimumAmount);
+    await couponPage.inputTextByLabel('Minimum purchase qty', inputData.minimumQuantity);
     await couponPage.selectDropdownByLabelCoupon('Customer groups', 'Default');
-    await commonPage.inputTextByLabel("Customer's purchase", inputData.customerPurchase);
-    await commonPage.clickButtonByLabel("Save");
+    await couponPage.inputTextByLabel("Customer's purchase", inputData.customerPurchase);
+    await couponPage.clickButtonByLabel("Save");
     await expect(page.getByText(`Editing ${inputData.couponCode}`)).toBeVisible();
 });

@@ -1,10 +1,10 @@
 import { expect, Page } from "@playwright/test";
+import { CommonPage } from "./commonPage";
+import { CommonBehavior } from "./commonInterface";
 
-export class CouponPage {
-    page: Page;
-
+export class CouponPage extends CommonPage implements CommonBehavior {
     constructor(page: Page) {
-        this.page = page;
+        super(page);
     }
     async isOnPage() {
         await expect(this.page.locator("//h1[text()='Create a new coupon']")).toBeVisible();

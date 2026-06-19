@@ -1,5 +1,6 @@
 import { expect, Page } from "@playwright/test";
 import path from "node:path";
+import { CommonBehavior } from "./commonInterface";
 
 export class CommonPage {
     page: Page;
