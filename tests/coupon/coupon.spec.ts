@@ -1,24 +1,17 @@
-import { expect, test } from "@playwright/test";
-import { CommonPage } from "../../src/pages/commonPage";
+import { expect } from "@playwright/test";
 import { CouponPage } from "../../src/pages/couponPage";
-import { LoginPage } from "../../src/pages/loginPage";
 import { DashboardPage } from "../../src/pages/dashboardPage";
-import { adminBaseUrl } from "../../src/utils/constants-utils";
+import { adminTest } from "../../src/fixtures/admin-fixture";
 
 let couponPage: CouponPage;
-let loginPage: LoginPage;
 let dashboardPage: DashboardPage;
 
-test.beforeEach('Before each test', async ({ page }) => {
+adminTest.beforeEach('Before each test', async ({ page }) => {
     dashboardPage = new DashboardPage(page);
     couponPage = new CouponPage(page);
-    loginPage = new LoginPage(page);
-    await page.goto(adminBaseUrl);
 });
 
-test('Verify create coupon successful', async ({ page }) => {
-    await loginPage.isOnPage();
-    await loginPage.defaultAdminLogin();
+adminTest('Verify create coupon successful', async ({ page }) => {
     await dashboardPage.isOnPage();
     await dashboardPage.clickMenuByLabel('New Coupon');
     await couponPage.isOnPage();

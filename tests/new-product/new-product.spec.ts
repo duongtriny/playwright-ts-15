@@ -1,24 +1,17 @@
-import { expect, test } from "@playwright/test";
-import { CommonPage } from "../../src/pages/commonPage";
+import { expect } from "@playwright/test";
 import { NewProductPage } from "../../src/pages/newProductPage";
-import { LoginPage } from "../../src/pages/loginPage";
 import { DashboardPage } from "../../src/pages/dashboardPage";
-import { adminBaseUrl } from "../../src/utils/constants-utils";
+import { adminTest } from "../../src/fixtures/admin-fixture";
 
 let dashboardPage: DashboardPage;
 let newProductPage: NewProductPage;
-let loginPage: LoginPage;
 
-test.beforeEach('Before each test', async ({ page }) => {
+adminTest.beforeEach('Before each test', async ({ page }) => {
     dashboardPage = new DashboardPage(page);
     newProductPage = new NewProductPage(page);
-    loginPage = new LoginPage(page);
-    await page.goto(adminBaseUrl);
 });
 
-test('Verify user can create a new product successful', async ({ page }) => {
-    await loginPage.isOnPage();
-    await loginPage.defaultAdminLogin();
+adminTest('Verify user can create a new product successful', async ({ page }) => {
     await dashboardPage.isOnPage();
     await dashboardPage.clickMenuByLabel('New Product');
     await newProductPage.isOnPage();
