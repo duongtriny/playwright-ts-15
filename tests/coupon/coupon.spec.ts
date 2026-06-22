@@ -3,6 +3,7 @@ import { CommonPage } from "../../src/pages/commonPage";
 import { CouponPage } from "../../src/pages/couponPage";
 import { LoginPage } from "../../src/pages/loginPage";
 import { DashboardPage } from "../../src/pages/dashboardPage";
+import { adminBaseUrl } from "../../src/utils/constants-utils";
 
 let couponPage: CouponPage;
 let loginPage: LoginPage;
@@ -12,12 +13,12 @@ test.beforeEach('Before each test', async ({ page }) => {
     dashboardPage = new DashboardPage(page);
     couponPage = new CouponPage(page);
     loginPage = new LoginPage(page);
-    await page.goto('http://localhost:3000/admin/login');
+    await page.goto(adminBaseUrl);
 });
 
 test('Verify create coupon successful', async ({ page }) => {
     await loginPage.isOnPage();
-    await loginPage.adminLogin('test@with.me', '1234567890');
+    await loginPage.defaultAdminLogin();
     await dashboardPage.isOnPage();
     await dashboardPage.clickMenuByLabel('New Coupon');
     await couponPage.isOnPage();

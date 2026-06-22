@@ -3,6 +3,7 @@ import { CommonPage } from "../../src/pages/commonPage";
 import { NewProductPage } from "../../src/pages/newProductPage";
 import { LoginPage } from "../../src/pages/loginPage";
 import { DashboardPage } from "../../src/pages/dashboardPage";
+import { adminBaseUrl } from "../../src/utils/constants-utils";
 
 let dashboardPage: DashboardPage;
 let newProductPage: NewProductPage;
@@ -12,15 +13,15 @@ test.beforeEach('Before each test', async ({ page }) => {
     dashboardPage = new DashboardPage(page);
     newProductPage = new NewProductPage(page);
     loginPage = new LoginPage(page);
-    await page.goto('http://localhost:3000/admin/login');
+    await page.goto(adminBaseUrl);
 });
 
 test('Verify user can create a new product successful', async ({ page }) => {
     await loginPage.isOnPage();
-    await loginPage.adminLogin('test@with.me', '1234567890');
+    await loginPage.defaultAdminLogin();
     await dashboardPage.isOnPage();
     await dashboardPage.clickMenuByLabel('New Product');
-    await dashboardPage.isOnPage();
+    await newProductPage.isOnPage();
     const random = new Date().getTime();
     const inputData = {
         productName: `Test With Me - ${random}`,
