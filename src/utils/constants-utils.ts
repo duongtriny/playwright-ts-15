@@ -4,3 +4,4 @@ export const host = 'http://localhost';
 export const port = '3000';
 export const adminLoginPath = '/admin/login';
 export const adminBaseUrl = `${host}:${port}${adminLoginPath}`;
+export const apiBaseUrl = `${host}:${port}`;

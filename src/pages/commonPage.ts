@@ -88,4 +88,12 @@ export class CommonPage {
         return await locator.textContent();
     }
 
+    async getToken() {
+        let cookies = await this.page.context().cookies();
+        let asidObj = cookies.find(c => c.name == 'asid');
+        let sidObj = cookies.find(c => c.name == 'sid');
+        let cookiesString = `sid=${sidObj?.value};asid=${asidObj?.value}`;
+        return cookiesString;
+    }
+
 }
