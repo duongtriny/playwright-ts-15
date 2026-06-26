@@ -66,7 +66,7 @@ adminTest('Verify user can create a new product successful', async ({ page }) =>
     await page.keyboard.press('Enter');
     await page.getByText(inputData.productName).click();
     await expect(page.getByText(`Editing ${inputData.productName}`)).toBeVisible();
-    productIds.push(editProductPage.getProductId());
+    let productId = editProductPage.getProductId();
     expect(await editProductPage.getInputValueByLabel('Product Name*')).toBe(inputData.productName);
     expect(await editProductPage.getInputValueByLabel('SKU*')).toBe(inputData.sku);
     expect(await editProductPage.getInputValueByLabel('Price*')).toBe(inputData.price);
@@ -74,6 +74,7 @@ adminTest('Verify user can create a new product successful', async ({ page }) =>
     expect(await editProductPage.getInputValueByLabel('URL Key*')).toBe(inputData.urlKey);
     expect(await editProductPage.getInputValueByLabel('Meta Title*')).toBe(inputData.metaTitle);
     expect((await editProductPage.getTextareaValueByLabel('Meta Description'))?.trim()).toBe(inputData.metaDescription);
+    productIds.push(productId);
 });
 
 adminTest('Verify user can create a new product with shipping successful', async ({ page }) => {
@@ -117,7 +118,7 @@ adminTest('Verify user can create a new product with shipping successful', async
     await page.keyboard.press('Enter');
     await page.getByText(inputData.productName).click();
     await expect(page.getByText(`Editing ${inputData.productName}`)).toBeVisible();
-    productIds.push(editProductPage.getProductId());
+    let productId = editProductPage.getProductId();
     expect(await editProductPage.getInputValueByLabel('Product Name*')).toBe(inputData.productName);
     expect(await editProductPage.getInputValueByLabel('SKU*')).toBe(inputData.sku);
     expect(await editProductPage.getInputValueByLabel('Price*')).toBe(inputData.price);
@@ -125,4 +126,5 @@ adminTest('Verify user can create a new product with shipping successful', async
     expect(await editProductPage.getInputValueByLabel('URL Key*')).toBe(inputData.urlKey);
     expect(await editProductPage.getInputValueByLabel('Meta Title*')).toBe(inputData.metaTitle);
     expect((await editProductPage.getTextareaValueByLabel('Meta Description'))?.trim()).toBe(inputData.metaDescription);
+    productIds.push(productId);
 });

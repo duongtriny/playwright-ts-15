@@ -1,0 +1,41 @@
+{
+    "name": "Test With Me - 1782481083096",
+    "sku": "SKU-1782481083096",
+    "price": 1000,
+    "tax_class": 1,
+    "description": [],
+    "url_key": "url-key-1782481083096",
+    "meta_title": "Biti's Hunter Pride",
+    "meta_keywords": "",
+    "meta_description": "Giày Thể Thao Nữ Biti's Hunter Pride Month Màu Trắng - Kiểu Dáng Court Sneaker Cổ Thấp",
+    "status": 0,
+    "visibility": 0,
+    "manage_stock": 0,
+    "stock_availability": 0,
+    "qty": 10,
+    "no_shipping_required": true,
+    "group_id": "1",
+    "images": [
+        "/assets/catalog/8416/3265/hunter-pride-month.jpg"
+    ],
+    "attributes": [
+        {
+            "attribute_code": "color",
+            "attribute_name": "Color",
+            "type": "select",
+            "attribute_id": "1",
+            "value": "2",
+            "is_required": 0
+        },
+        {
+            "attribute_code": "size",
+            "attribute_name": "Size",
+            "type": "select",
+            "attribute_id": "2",
+            "value": "5",
+            "is_required": 0
+        }
+    ],
+    "category_id": 2,
+    "weight_no_shipping": null
+}
