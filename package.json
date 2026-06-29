@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test:local": "npx playwright test tests/coupon/coupon.spec.ts",
+    "test:ci": "TEST_ENV=ci npx playwright test tests/coupon/coupon.spec.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -11,5 +14,8 @@
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.1"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }
