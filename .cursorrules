@@ -1,0 +1,32 @@
+# Tự động nạp: Quy tắc lập trình cho Automation Script (Playwright & TypeScript)
+
+Bạn là trợ lý AI (Antigravity). Khi được yêu cầu viết code automation script, test case, hoặc page object mới trong dự án này, bạn PHẢI tuân thủ các quy tắc sau:
+
+1. **Page Object Model (POM)**:
+   - Bất kỳ class Page nào mới được tạo đều phải kế thừa từ class `CommonPage` (`src/pages/commonPage.ts`) và implement interface `CommonBehavior` (`src/pages/commonInterface.ts`).
+   - Mọi hàm tương tác với UI phải được định nghĩa trong các Page Object, không viết lẫn lộn trong file spec.
+
+2. **Allure Report Integration**:
+   - Mọi thao tác (method) bên trong Page Object phải được bọc trong hàm `allure.step('Description', async () => { ... })` để ghi log chi tiết cho Allure Report.
+
+3. **Locator Strategies (Chiến lược tìm element)**:
+   - Ưu tiên cao nhất là tái sử dụng các hàm đã có sẵn trong `CommonPage` (vd: `inputTextByLabel`, `clickButtonByLabel`) vì chúng đã bao quát hầu hết các form cơ bản.
+   - Khi bắt buộc phải viết locator mới, **TUYỆT ĐỐI TUÂN THỦ nguyên tắc viết XPath dựa trên Label** đã được định hình trong dự án:
+     + Dùng **văn bản hiển thị trên màn hình (Label/Text)** làm điểm neo (anchor) với hàm `normalize-space()='...'` (vd: `//label[normalize-space()='First Name']`). Hạn chế dùng `contains(text(),...)` để tránh nhận diện nhầm.
+     + Từ điểm neo, dùng các trục XPath (XPath axes) như `following::`, `preceding::` để tìm đến target element gần nhất (vd: `//label[normalize-space()='Email']/following::input[1]`).
+     + Kết hợp với các thuộc tính chuẩn như `@role` (vd: `@role='checkbox'`, `@role='option'`) hoặc `@type` để đảm bảo tính duy nhất.
+     + Hạn chế dùng class name CSS hoặc cấu trúc DOM lồng nhau phức tạp vì chúng rất dễ gãy. Nếu bắt buộc phải tìm theo class, dùng cấu trúc an toàn: `contains(concat(' ', @class, ' '), ' class-name ')`.
+
+4. **Sử dụng Fixtures**:
+   - Đối với các test cần quyền admin, bắt buộc phải dùng `adminTest` được import từ `src/fixtures/admin-fixture.ts` thay vì dùng `test` mặc định của Playwright. Fixture này tự động login admin và chụp màn hình nếu test fail.
+
+5. **Kết hợp API và UI (Hybrid Testing)**:
+   - Để tối ưu hóa thời gian chạy, ưu tiên sử dụng API để chuẩn bị dữ liệu (Setup) và dọn dẹp dữ liệu (Teardown). Ví dụ: tạo mới dữ liệu bằng hàm gọi API như `newProductByApi` trước khi tiến hành test UI cho tính năng Edit, và xóa chúng trong khối `afterAll`.
+
+6. **Biến môi trường và Hằng số**:
+   - Tuyệt đối không hardcode URLs, username, password, hoặc token vào trong script. Hãy import chúng từ `src/utils/constants-utils.ts` hoặc sử dụng biến môi trường qua `src/utils/config-utils.ts`.
+
+7. **Test Data**:
+   - Các body data lớn phục vụ gọi API hoặc các payload phức tạp phải được tách riêng thành file `.json` và lưu trong thư mục `resources/data/`.
+
+Bằng cách tuân thủ tài liệu này, bạn sẽ giúp mã nguồn thống nhất, dễ bảo trì và mở rộng.
